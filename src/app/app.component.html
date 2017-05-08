@@ -1,3 +1,17 @@
 <h1>
-  {{title}}
+  <h2>{{name}}</h2>
+
+  <input type="text" placeholder="Enter city" [formControl]="searchInput">
+  <br/>
+  <h2>Data:</h2>
+  <ul>
+    <li>Company: {{dataSet[0]?.CompanyCode}}</li>
+    <li>Account: {{dataSet[0]?.Account}}</li>
+    <li>City: {{dataSet[0]?.City}}</li>
+    <li>Country:     {{dataSet[0]?.Country}}</li>
+    <li>CreditRating: {{dataSet[0]?.CreditRating}}</li>
+    <li>Currency: {{dataSet[0]?.Currency}}</li>
+    <li>Amount: {{dataSet[0]?.Amount}}</li>
+  </ul>
 </h1>
+
