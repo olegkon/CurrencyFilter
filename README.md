@@ -26,3 +26,11 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+Data has been supplied via DataService (found in src/service.ts) which contains a method getData() and returns an Observable Array of TestDataItem objects (found in src/model.ts) .
+
+Create a new Angular2 component that displays total value per country in USD using below conversion rates:
+
+CHF->USD 1.10 GBP->USD 1.21
+
+You can make the display as simple or complex as you like and even include 3rd party scripts to improve look and feel, etc.
