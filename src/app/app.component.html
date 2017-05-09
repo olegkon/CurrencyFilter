@@ -1,10 +1,8 @@
 <h1>
   <h2>{{name}}</h2>
 
-  <input type="text" placeholder="Enter city" [formControl]="searchInput">
-  <br/>
-  <h2>Data:</h2>
-  <ul>
+
+  <!-- ul>
     <li>Company: {{dataSet[0]?.CompanyCode}}</li>
     <li>Account: {{dataSet[0]?.Account}}</li>
     <li>City: {{dataSet[0]?.City}}</li>
@@ -12,6 +10,10 @@
     <li>CreditRating: {{dataSet[0]?.CreditRating}}</li>
     <li>Currency: {{dataSet[0]?.Currency}}</li>
     <li>Amount: {{dataSet[0]?.Amount}}</li>
-  </ul>
+  </ul -->
+
+  <h2>Input data:</h2>
+  <ag-grid-ng2 id="grid-portfolio-selection" class="ag-fresh" [gridOptions]="gridOptions">
+  </ag-grid-ng2>   <!--(selectionChanged)="onDataSelectionChanged()" -->
 </h1>
 
