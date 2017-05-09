@@ -1,14 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule,Component, VERSION } from '@angular/core';
+import { NgModule, Component, VERSION } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { AgGridNg2 } from 'ag-grid-angular/main';
-import { GridOptions } from 'ag-grid/main';
+// import { AgGridNg2 } from 'ag-grid-angular/main';
+// import { GridOptions } from 'ag-grid/main';
 import { AgGridModule } from 'ag-grid-angular/main';
 
 import { AppComponent } from './app.component';
-import {DataService} from "./service";
+import { DataService } from './service';
 
 
 @NgModule({
@@ -19,7 +19,7 @@ import {DataService} from "./service";
     BrowserModule,
     FormsModule,
     HttpModule,
-    AgGridModule
+    AgGridModule.withComponents([''])
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

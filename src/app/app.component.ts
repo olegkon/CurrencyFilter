@@ -1,12 +1,12 @@
 import { Component, VERSION } from '@angular/core';
 import { DataService } from './service';
-import { FormControl } from "@angular/forms";
-import { TestDataItem } from "./model";
+import { FormControl } from '@angular/forms';
+import { TestDataItem } from './model';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/switchMap';
 
 import { AgGridNg2 } from 'ag-grid-angular/main';
-import { GridOptions } from 'ag-grid/main';
+import { GridOptions } from 'ag-grid';
 import { AgGridModule } from 'ag-grid-angular/main';
 
 
@@ -15,16 +15,17 @@ import { AgGridModule } from 'ag-grid-angular/main';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
-  name:string;
-  //title = 'app works!';
+  name: string;
+  // title = 'app works!';
   searchInput: FormControl;
   dataSet: TestDataItem[];
   gridOptions: GridOptions;
 
 
   constructor(dataService: DataService) {
-    this.name = `Angular v${VERSION.full} Coding Test`;
+    this.name = `Angular v${VERSION.full} test`;
 
     this.gridOptions = <GridOptions>{};
     this.gridOptions.rowData = []; // 'undefined'];
@@ -56,17 +57,17 @@ export class AppComponent {
   }
 
 
-  getData(dataService: DataService) {  //formValue
+  getData(dataService: DataService) {  // formValue
     dataService.getData()
       .subscribe(
         data => {
-          console.dir("got data: " + data);
+          console.dir('got data: ' + JSON.stringify(data));
 
-          //this.userId = formValue.userID;
-          //this.portfolios = data;
-          this.gridOptions.api.setRowData(data); 	// pass grid data and refresh display
+          // this.userId = formValue.userID;
+          // this.portfolios = data;
+          this.gridOptions.rowData = data; // api.setRowData(data); 	// pass grid data and refresh display
         },
-        err => console.log("Can't get data. Error code: %s, URL: %s ", err.status, err.url),
+        err => console.log('Cant get data. Error code: %s, URL: %s ', err.status, err.url),
         () => console.log('Done')
       );
   }
