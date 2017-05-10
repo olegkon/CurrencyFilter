@@ -1,4 +1,4 @@
-<h1>
+<h1> Country  Currency filter </h1>
   <h2>{{name}}</h2>
 
 
@@ -13,7 +13,20 @@
   </ul -->
 
   <h2>Input data:</h2>
-  <ag-grid-angular id="input-grid" class="ag-fresh" [gridOptions]="gridOptions">
-  </ag-grid-angular>   <!--(selectionChanged)="onDataSelectionChanged()" -->
-</h1>
+
+  <div style="width: 750px;">
+    <ag-grid-angular #agGrid style="width: 100%; height: 550px;" class="ag-fresh"
+                     [gridOptions]="gridOptions">
+    </ag-grid-angular>
+  </div>
+
+<br/><br/>
+
+<h2>Output data:</h2>
+
+<div style="width: 350px;">
+  <ag-grid-angular #agGrid style="width: 100%; height: 250px;" class="ag-fresh"
+                   [gridOptions]="gridOptions1">
+  </ag-grid-angular>
+</div>
 

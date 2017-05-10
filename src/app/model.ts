@@ -10,3 +10,9 @@ export class TestDataItem {
   "Currency": string;
   "Amount": number;
 }
+
+
+export class CountryBank {
+  Country: string;
+  Amount: number;
+}
