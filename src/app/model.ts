@@ -15,4 +15,9 @@ export class TestDataItem {
 export class CountryBank {
   Country: string;
   Amount: number;
+
+  constructor(country, amount) {
+    this.Country = country;
+    this.Amount = amount;
+  }
 }

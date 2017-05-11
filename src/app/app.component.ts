@@ -11,6 +11,7 @@ import { CountryBank } from './model';
 //import { AgGridNg2 } from 'ag-grid-angular/main';
 //import { AgGridModule } from 'ag-grid-angular/main';
 import { GridOptions } from 'ag-grid';
+import {forEach} from "@angular/router/src/utils/collection";
 
 
 
@@ -51,25 +52,11 @@ export class AppComponent {
 
     this.gridOptions1 = {}; // <GridOptions>{};
 
-    this.gridOptions1.columnDefs = [  // for Input grid
-      //{headerName: 'Company Code', field: 'CompanyCode', width: 110},
-      //{headerName: 'City', field: 'City', width: 100},
-     // {headerName: 'Account', field: 'Account', width: 100},
+    this.gridOptions1.columnDefs = [  // for Output grid
       {headerName: 'Country', field: 'Country', width: 100},
-      //{headerName: 'Credit Rating', field: 'CreditRating', width: 100},
       //{headerName: 'Currency', field: 'Currency', width: 70},
       {headerName: 'Amount (US$)', field: 'Amount', width: 180}
     ];
-/*
-    this.searchInput = new FormControl('');
-    this.searchInput.valueChanges
-        .debounceTime(300)
-        .switchMap((place: string) => dataService.getData())
-        .subscribe(
-          (dataSet: TestDataItem[]) => this.dataSet = dataSet,
-          error => console.error(error),
-          () => console.log('Data is retrieved'));
-*/
   }
 
 
@@ -79,12 +66,32 @@ export class AppComponent {
     dataService.getData()
       .subscribe(
         data => {
-          console.dir('got data: ' + JSON.stringify(data));
+          console.dir('input size: '+data.length+', data: ' + JSON.stringify(data));
           this.gridOptions.rowData = data; // api.setRowData(data); 	// pass grid data and refresh display
+          this.appData = data;
+          this.processData(data);
         },
         err => console.log('Cant get data. Error code: %s, URL: %s ', err.status, err.url),
         () => console.log('Done')
       );
+  }
+
+
+  processData(data: TestDataItem[]) {  // formValue
+    for (let item of data) {
+      if (item.Country != null && item.Country != '') {  // CHF->USD 1.10 GBP->USD 1.21
+        if (item.Currency === 'CHF')
+          this.countryAggr.push(new CountryBank(item.Country, item.Amount * 1.1) );
+        else if (item.Currency === 'GBP')
+          this.countryAggr.push(new CountryBank(item.Country, item.Amount * 1.21) );
+        else if (item.Currency === 'USD')
+          this.countryAggr.push(new CountryBank(item.Country, item.Amount) );
+        else
+          console.log('ERROR: wrong currency detected: '+item.Currency);
+      }
+    }
+    console.dir('got output size: '+this.countryAggr.length+ ', data: ' + JSON.stringify(this.countryAggr));
+    this.gridOptions1.rowData = this.countryAggr;  //api.setRowData(this.countryAggr);
   }
 
 }
