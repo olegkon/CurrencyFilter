@@ -77,21 +77,45 @@ export class AppComponent {
   }
 
 
-  processData(data: TestDataItem[]) {  // formValue
+  processData(data: TestDataItem[]) {  // currency aggregator (with converter CHF->USD 1.10 GBP->USD 1.21)
+    let obj: CountryBank = null;
     for (let item of data) {
-      if (item.Country != null && item.Country != '') {  // CHF->USD 1.10 GBP->USD 1.21
-        if (item.Currency === 'CHF')
-          this.countryAggr.push(new CountryBank(item.Country, item.Amount * 1.1) );
-        else if (item.Currency === 'GBP')
-          this.countryAggr.push(new CountryBank(item.Country, item.Amount * 1.21) );
-        else if (item.Currency === 'USD')
-          this.countryAggr.push(new CountryBank(item.Country, item.Amount) );
-        else
-          console.log('ERROR: wrong currency detected: '+item.Currency);
-      }
-    }
-    console.dir('got output size: '+this.countryAggr.length+ ', data: ' + JSON.stringify(this.countryAggr));
-    this.gridOptions1.rowData = this.countryAggr;  //api.setRowData(this.countryAggr);
+      if (item.Country != null && item.Country !== undefined && item.Country !== '') {  // country valid
+        obj = this.countryAggr.find(ct => ct.Country === item.Country);
+        if (obj === null) { // found existing country --> add amount
+          if (item.Currency === 'CHF') {
+            obj.Amount += item.Amount * 1.1;
+            console.log('added to ' + obj.Country + ' $' + item.Amount * 1.1);
+          } else if (item.Currency === 'GBP') {
+            obj.Amount += item.Amount * 1.21;
+            console.log('added to ' + obj.Country + ' $' + item.Amount * 1.21);
+          } else if (item.Currency === 'USD') {
+            obj.Amount += item.Amount;
+            console.log('added to ' + obj.Country + ' $' + item.Amount);
+          } else {
+            console.log('ERROR: wrong currency detected: ' + item.Currency);
+          }
+        } else {  // not found Country in CountryAggr --> add row
+
+          if (item.Currency === 'CHF') {
+            this.countryAggr.push(new CountryBank(item.Country, item.Amount * 1.1));
+            console.log('added ' + obj.Country);
+          } else if (item.Currency === 'GBP') {
+            this.countryAggr.push(new CountryBank(item.Country, item.Amount * 1.21));
+            console.log('added ' + obj.Country);
+          } else if (item.Currency === 'USD') {
+            this.countryAggr.push(new CountryBank(item.Country, item.Amount));
+            console.log('added ' + obj.Country);
+          } else {
+            console.log('ERROR: wrong currency detected: ' + item.Currency);
+          }
+        }
+      } else {
+          console.log('ERROR: Country name blank or NULL for Company code: ' + item.CompanyCode);
+      } // end of if
+    } // end of for
+    console.dir('got output size: ' + this.countryAggr.length + ', data: ' + JSON.stringify(this.countryAggr));
+    // this.gridOptions1.rowData = this.countryAggr;  //api.setRowData(this.countryAggr);
   }
 
 }
