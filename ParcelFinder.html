@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Parcel Finder</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>&nbsp;Parcel Finder</h3>
+    <br><b>&nbsp; Please enter location or APN: </b><br><br>
+
+    <form id="form1" action="" method="post">
+        Address: &nbsp;&nbsp;&nbsp; <input type="text" name="faddr" value="" ><br>
+        City: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="city" value="" ><br>
+        State: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="SCA" value="" ><br>
+        or Zip: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="ZA" value="" ><br><br>OR<br><br>
+
+        Latitude: &nbsp;&nbsp; <input type="text" name="lat" value="" ><br>
+        Longitude: <input type="text" name="lon" value="" ><br><br>OR<br><br>
+
+        APN: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" name="APN" value="" ><br><br>
+
+        <input type="Button" value="Search" onclick="submitFunc(this.form)">
+
+    </form>
+
+
+    <textarea rows="10" cols="70" name="resultTA" id="resultTA" style="visibility:hidden">
+    </textarea>
+
+
+    <div id="map" style.visibility='hidden'></div>
+
+
+
+    <script>
+
+        function submitFunc(form) { // build full URL string (for Parcel Data Web Service) from input form params
+            //var x = document.getElementById("form1");
+            var url = "https://rest.parcelatlas.com/Parcels/17683FD7-9813-4939-82D8-0DAE663D054F/";  //from their site: D3342484-32CD-DD11-AF04-0003FF70C8AE/";
+
+            if (form.ZA.value != "")
+                url += "ZA/"+form.ZA.value+"/";
+            if (form.SCA.value != "")
+                url += "SCA/"+form.SCA.value+"/";
+            if  (form.city.value != "")
+                url += encodeURI(form.city.value)+"/";
+            if (form.faddr.value != "")
+                url += encodeURI(form.faddr.value)+"/";
+            if (form.lat.value != "")
+                url += "LatLon/1/5?lat="+form.lat.value;
+            if (form.lon.value != "")
+                url += "&lon="+form.lon.value+"&buffer=0";
+            if (form.APN.value != "")
+                url += "APN/"+encodeURI(form.APN.value)+"/";
+            //alert(url);
+            console.log("URL: "+url);
+
+            //req.open("POST", url, true);
+            req.open("GET", url, true);
+            //req.setRequestHeader("Content-Type", "text/xml");  //"application/x-www-form-urlencoded");
+            //req.withCredentials = true;
+            req.send(); //(form-encoded request body);
+        }
+
+
+        var req = createRequest();
+
+        function createRequest() {  //create XML Http Request (for call to web service)
+            var result = null;
+            if (window.XMLHttpRequest) {
+                // FireFox, Safari, etc.
+                result = new XMLHttpRequest();
+                if (typeof result.overrideMimeType != 'undefined') {
+                    result.overrideMimeType('text/xml'); // Or anything else
+                }
+            }
+            else if (window.ActiveXObject) {
+                // MSIE
+                result = new ActiveXObject("Microsoft.XMLHTTP");
+            }
+            else {
+                // No known mechanism -- consider aborting the application
+            }
+            return result;
+        }
+
+
+
+        // Create the callback
+        req.onreadystatechange = function() {   // process returned XML data (from web service call)
+            if (req.readyState != 4) return; // Not there yet
+            if (req.status != 200) {
+                // Handle request failure here...
+                alert("Received request Status=" + req.status)
+                return;
+            }
+            // Request successful, read the response
+            var resp = req.responseText;
+            // ... and use it as needed by your app.
+
+            if (resp == "" || resp == undefined) {
+                alert("No response received");
+            } //else  alert(resp);  //OK: good respomse
+
+            if (window.DOMParser) {
+                parser = new DOMParser();
+                xmlDoc = parser.parseFromString(resp, "text/xml");
+            } else { // Internet Explorer
+                xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+                xmlDoc.async = false;
+                xmlDoc.loadXML(resp);
+            }
+
+            var queryresp = xmlDoc.childNodes[0];
+
+            var errorMsg;
+            if (queryresp.getElementsByTagName("Error")[0].childNodes[0] != undefined)  // if Error tag received
+                errorMsg = queryresp.getElementsByTagName("Error")[0].childNodes[0].nodeValue;
+            if (errorMsg != undefined)
+                alert("Error: "+errorMsg);
+
+            var parcels = queryresp.childNodes[1];
+            var parcel = parcels.childNodes[0];
+
+            //Gets house address number
+            var latitude = parcel.getElementsByTagName("Latitude")[0].childNodes[0].nodeValue;  // lat
+            var longitude = parcel.getElementsByTagName("Longitude")[0].childNodes[0].nodeValue;    // lng
+            var polygon = parcel.getElementsByTagName("ShapeWKT")[0].childNodes[0].nodeValue;
+            //alert("long="+longitude+", lat="+latitude+", polygon="+polygon);
+
+            // trim polygon coords string
+            polygon = polygon.trim();
+            polygon = polygon.substr(9);
+            var len = polygon.length;
+            polygon = polygon.substr(0,len-2);
+
+            initMap(longitude, latitude, polygon);
+            //map.style.display = 'block';
+            map.style.visibility = 'visible';
+        }
+
+
+        function getCoords(polyStr) {   // parse polygon coords string and create an array from it
+            if (polyStr == undefined || polyStr.length==0) {
+                alert("Error: missing polygon coordinates");
+                return;
+            }
+            var pairs = polyStr.split(",");
+            //var len = pairs.length;
+            var pair, obj;
+            var arr = new Array();
+            for (var i=0, len=pairs.length; i < len; i++) {
+                pair = pairs[i].split(" ");
+                obj = new Object( {lat: Number(pair[1]), lng: Number(pair[0]) } );
+                arr.push(obj);
+            }
+            return arr;
+        }
+
+
+        function initMap(longitude, latitude, polyStr) {    // initialize Google Map with center and polygon coords
+            var resultText = "Parcel 1:\n";
+            if (longitude != undefined) {// on call from within
+                resultText += "longitude=" + longitude + ", latitude=" + latitude + "\npolygon: " + polyStr;
+                //alert(resultText);
+                resultTA.style.visibility = 'visible';  //style.display = "block";
+                resultTA.value = resultText;
+                //resultTA.className = "show";
+                //resultTA.readOnly = true;
+            } else    // initially - don't display
+                return;
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 18,
+                center: {lat: Number(latitude), lng: Number(longitude) },
+                //center: {lat: 40.613395613000000000, lng: -73.957967934900000000}, // Blyn
+                //GA {lat: 33.757920848200000000, lng: -84.449756415200000000}, // {lat: 24.886, lng: -70.268},
+                mapTypeId: 'terrain' //'hybrid'
+            });
+
+            //alert("Map:  lat="+map.center.lat+", lng="+map.center.lng);
+
+            // Define the LatLng coordinates for the polygon's path.
+            var polygonCoords = getCoords(polyStr);
+            //[
+/*  GA          {lat: 33.7579326207, lng: -84.4495106823},  {lat: 33.7577604132, lng: -84.4499184455}, {lat: 33.7579058782, lng: -84.4500003621},
+                {lat: 33.758082675,  lng: -84.4496049541},  {lat: 33.7579326207, lng: -84.4495106823}
+
+            [   {lat: 40.6135740737, lng: -73.957867181},  {lat: 40.6134803994, lng: -73.9578463844}, {lat: 40.6134017201, lng: -73.9578289172},
+                {lat: 40.6133295404, lng: -73.9578128924}, {lat: 40.6132683622, lng: -73.9577993106}, {lat: 40.6132048551, lng: -73.9577852124},
+                {lat: 40.6131735832, lng: -73.9580659239}, {lat: 40.6135905201, lng: -73.9581454048}, {lat: 40.6136203701, lng: -73.9578774586},
+                {lat: 40.6135740737, lng: -73.957867181}
+            ];
+*/
+            // Construct the polygon.
+            var poly = new google.maps.Polygon({
+                paths: polygonCoords,
+                strokeColor: '#FF0000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#FF0000',
+                fillOpacity: 0.35
+            });
+            poly.setMap(map);
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAhjTsOhcx7YIbhnzt3-BbwF6M2aFPeMqc&callback=initMap">
+    </script>
+</body>
+</html>
