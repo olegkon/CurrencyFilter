@@ -18,8 +18,7 @@ export class DataService {
         "Country":"USA",
         "CreditRating":"AAA+",
         "Currency":"CHF",
-        "Amount":9223372036854776000
-
+        "Amount": 9223372036854776000
       },
       {
         "CompanyCode":2301,
@@ -28,8 +27,7 @@ export class DataService {
         "Country":"USA",
         "CreditRating":"BBB",
         "Currency":"CHF",
-        "Amount":-9223372036854776000
-
+        "Amount": -9223372036854776000
       },
       {
         "CompanyCode":2302,
@@ -39,7 +37,6 @@ export class DataService {
         "CreditRating":"A",
         "Currency":"GBP",
         "Amount":456.85014
-
       },
       {
         "CompanyCode":2303,
@@ -49,7 +46,6 @@ export class DataService {
         "CreditRating":"AAA+",
         "Currency":"CHF",
         "Amount":65484231.44
-
       },
       {
         "CompanyCode":2304,
@@ -59,7 +55,6 @@ export class DataService {
         "CreditRating":"A",
         "Currency":"GBP",
         "Amount":312139226.6
-
       },
       {
         "CompanyCode":2305,
@@ -69,7 +64,6 @@ export class DataService {
         "CreditRating":"Aa",
         "Currency":"CHF",
         "Amount":572106536.9
-
       },
       {
         "CompanyCode":2306,
@@ -79,7 +73,6 @@ export class DataService {
         "CreditRating":"A",
         "Currency":"CHF",
         "Amount":842062993.3
-
       },
       {
         "CompanyCode":2307,
@@ -89,7 +82,6 @@ export class DataService {
         "CreditRating":"Aa",
         "Currency":"CHF",
         "Amount":607295781.3
-
       },
       {
         "CompanyCode":2308,
@@ -99,7 +91,6 @@ export class DataService {
         "CreditRating":"A",
         "Currency":"CHF",
         "Amount":885799082.5
-
       },
       {
         "CompanyCode":2309,
@@ -109,7 +100,6 @@ export class DataService {
         "CreditRating":"A",
         "Currency":"CHF",
         "Amount":-398659337.540115
-
       },
       {
         "CompanyCode":2310,
@@ -119,7 +109,6 @@ export class DataService {
         "CreditRating":"AAA+",
         "Currency":"USD",
         "Amount":-48121843.4
-
       },
       {
         "CompanyCode":2311,
@@ -129,7 +118,6 @@ export class DataService {
         "CreditRating":"NR",
         "Currency":"CHF",
         "Amount":603000673.3
-
       },
       {
         "CompanyCode":2312,
@@ -139,7 +127,6 @@ export class DataService {
         "CreditRating":"-",
         "Currency":"GBP",
         "Amount":789463.4
-
       },
       {
         "CompanyCode":2313,
@@ -149,7 +136,6 @@ export class DataService {
         "CreditRating":"B",
         "Currency":"CHF",
         "Amount":361265747.3
-
       },
       {
         "CompanyCode":2314,
@@ -159,7 +145,6 @@ export class DataService {
         "CreditRating":"a",
         "Currency":"GBP",
         "Amount":86520110.97
-
       },
       {
         "CompanyCode":2315,
@@ -169,7 +154,6 @@ export class DataService {
         "CreditRating":"AAA+",
         "Currency":"USD",
         "Amount":6521555.25647
-
       },
       {
         "CompanyCode":2316,
@@ -179,7 +163,6 @@ export class DataService {
         "CreditRating":"NR",
         "Currency":"CHF",
         "Amount":617755137
-
       },
       {
         "CompanyCode":2317,
@@ -189,7 +172,6 @@ export class DataService {
         "CreditRating":"Aaa-",
         "Currency":"CHF",
         "Amount":112170814.9
-
       },
       {
         "CompanyCode":2318,
@@ -199,7 +181,6 @@ export class DataService {
         "CreditRating":"Aaa+",
         "Currency":"CHF",
         "Amount":836211889.9
-
       }
     ];
 
